@@ -1,6 +1,6 @@
 # ShaderToy
 WebGL Renderer for quick shader based toys.
-If you are familiar with [http://shadertoy.com](http://shadertoy.com), you will quickly be able to use the this tool.
+If you are familiar with [http://shadertoy.com](http://shadertoy.com), you will quickly be able to use this tool.
 
 ### Shader Inputs ###
 ```glsl
