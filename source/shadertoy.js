@@ -28,7 +28,7 @@ ShaderToy.prototype = {
 
     height: 240,
 
-    version: '0.0.1',
+    version: '0.0.2',
 
     _vertexShader: [
         'attribute vec2 position;',
@@ -268,7 +268,7 @@ ShaderToy.prototype = {
             'background: #00ffff; color: #1A1A1A; font-size: x-large;',
             'background: transparent; color: #000000; font-size: x-small;'
         ];
-        
+
         if ( !window.shadertoycredits ) {
 
             window.shadertoycredits = true;
