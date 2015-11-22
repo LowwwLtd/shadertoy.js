@@ -268,7 +268,13 @@ ShaderToy.prototype = {
             'background: #00ffff; color: #1A1A1A; font-size: x-large;',
             'background: transparent; color: #000000; font-size: x-small;'
         ];
-        console.log.apply( console, args );
+        
+        if ( !window.shadertoycredits ) {
+
+            window.shadertoycredits = true;
+            console.log.apply( console, args );
+
+        }
 
         // random texture
         this.texture = this._createTexture(this._createNoiseTextureBuffer( 256, 256 ), this._textureCount++);
