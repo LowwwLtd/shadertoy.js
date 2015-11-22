@@ -2,6 +2,9 @@
 WebGL Renderer for quick shader based toys.
 If you are familiar with [http://shadertoy.com](http://shadertoy.com), you will quickly be able to use this tool.
 
+### Example ###
+[![Basic Example](http://andrevenancio.com/thumbnails/1.png)](http://andrevenancio.com/experiments/1.html)
+
 ### Shader Inputs ###
 ```glsl
 // viewport resolution (in pixels).
