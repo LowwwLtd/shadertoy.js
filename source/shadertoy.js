@@ -16,7 +16,7 @@ ShaderToy.prototype = {
 
     constructor: ShaderToy.prototype,
 
-    version: '0.0.3',
+    version: '0.0.4',
 
     mouse: new Float32Array(2),
 
