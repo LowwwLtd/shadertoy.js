@@ -16,7 +16,7 @@ ShaderToy.prototype = {
 
     constructor: ShaderToy.prototype,
 
-    version: '0.0.3',
+    version: '0.0.4',
 
     mouse: new Float32Array(2),
 
@@ -340,6 +340,12 @@ ShaderToy.prototype = {
             self._updateTexture(index || 0, image);
 
         };
+
+    },
+
+    generateNoiseTexture: function (size, index) {
+
+        this.textures[index || 0] = this._createTexture(this._createTextureBuffer(size, size));
 
     },
 
