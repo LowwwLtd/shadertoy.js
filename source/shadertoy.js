@@ -293,7 +293,7 @@ ShaderToy.prototype = {
         }
 
         var args = [
-            '\n%cShader%cToy %c v: ' + this.version + '\n',
+            '\n%cShader%cToy%c v: ' + this.version + '\n',
             'background: #1A1A1A; color: #00ffff; font-size: x-large;',
             'background: #00ffff; color: #1A1A1A; font-size: x-large;',
             'background: transparent; color: #000000; font-size: x-small;'];
