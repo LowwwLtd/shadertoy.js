@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-        <title>Basic</title>
+        <title>dev</title>
         <style>
             html, body {
                 width: 100%;
@@ -19,7 +19,7 @@
         </style>
     </head>
     <body>
-        <script src="/build/shadertoy.min.js"></script>
+        <script src="shadertoy.js"></script>
         <script>
 
             var renderer;
@@ -32,13 +32,7 @@
                 renderer = new ShaderToy();
                 renderer.setSize(window.innerWidth, window.innerHeight);
 
-                var fragment = [
-                    'void mainImage( out vec4 fragColor, in vec2 fragCoord ) {',
-                    '   vec2 uv = fragCoord.xy / iResolution.xy;',
-                    '   fragColor.rgb = vec3( uv, 0.5 + 0.5 * cos( iGlobalTime ) );',
-                    '}'].join('\n');
-
-                renderer.writeFragment(fragment);
+                renderer.loadFragment('test.frag');
 
                 window.addEventListener('resize', resize.bind(this));
 
