@@ -343,6 +343,12 @@ ShaderToy.prototype = {
 
     },
 
+    generateNoiseTexture: function (size, index) {
+
+        this.textures[index || 0] = this._createTexture(this._createTextureBuffer(size, size));
+
+    },
+
     writeFragment: function (str) {
 
         this._ready = false;
