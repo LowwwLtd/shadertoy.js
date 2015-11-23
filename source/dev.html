@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>dev</title>
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            body {
+                background: #000000;
+            }
+            canvas {
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="shadertoy.js"></script>
+        <script>
+
+        var renderer, image;
+
+        init();
+        update();
+
+        function init() {
+
+        renderer = new ShaderToy();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        renderer.loadFragment('test.frag');
+        renderer.loadImage('uv.png');
+        setTimeout(function(){
+            renderer.loadImage('uv2.png');
+        }, 2000);
+
+        window.addEventListener('resize', resize.bind(this));
+
+        }
+
+        function update() {
+
+        requestAnimationFrame(update);
+
+        renderer.render();
+
+        }
+
+        function resize() {
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        }
+
+        </script>
+    </body>
+</html>

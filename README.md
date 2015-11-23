@@ -49,7 +49,7 @@ The most basic usage is described below. This will start the factory shader.
 </script>
 ```
 
-Next you need to decide how to feed the new shader. You can load an external GLSL file by calling the `.load()` method, or you can write your shader inline accessing directly the `.write()` method.
+Next you need to decide how to feed the new shader. You can load an external GLSL file by calling the `.loadFragment()` method, or you can write your shader inline accessing directly the `.writeFragment()` method.
 
 
 Loading an external file:
@@ -58,7 +58,7 @@ function init() {
 
     renderer = new ShaderToy();
     renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.load( 'path/to/my/glsl.file' );
+    renderer.loadFragment( 'path/to/my/glsl.file' );
 
 }
 ```
@@ -76,7 +76,7 @@ function init() {
         '}'
     ].join( '\n' );
 
-    renderer.write( fragment );
+    renderer.writeFragment( fragment );
 
 }
 ```
