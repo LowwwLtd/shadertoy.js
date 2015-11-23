@@ -22,39 +22,35 @@
         <script src="shadertoy.js"></script>
         <script>
 
-        var renderer, image;
+            var renderer;
 
-        init();
-        update();
+            init();
+            update();
 
-        function init() {
+            function init() {
 
-        renderer = new ShaderToy();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer = new ShaderToy();
+                renderer.setSize(window.innerWidth, window.innerHeight);
 
-        renderer.loadFragment('test.frag');
-        renderer.loadImage('uv.png');
-        setTimeout(function(){
-            renderer.loadImage('uv2.png');
-        }, 2000);
+                renderer.loadFragment('test.frag');
 
-        window.addEventListener('resize', resize.bind(this));
+                window.addEventListener('resize', resize.bind(this));
 
-        }
+            }
 
-        function update() {
+            function update() {
 
-        requestAnimationFrame(update);
+                requestAnimationFrame(update);
 
-        renderer.render();
+                renderer.render();
 
-        }
+            }
 
-        function resize() {
+            function resize() {
 
-        renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setSize(window.innerWidth, window.innerHeight);
 
-        }
+            }
 
         </script>
     </body>
