@@ -16,7 +16,7 @@ ShaderToy.prototype = {
 
     constructor: ShaderToy.prototype,
 
-    version: '0.0.4',
+    version: '0.0.5',
 
     mouse: new Float32Array(2),
 
@@ -124,68 +124,48 @@ ShaderToy.prototype = {
 
     },
 
-    _createTextureBuffer: function (width, height) {
+    _createTexture: function (index) {
 
-        var id = new Uint8Array(width * height * 4);
-        id.width = width;
-        id.height = height;
-
-        for (var i = 0; i < id.length; i += 4) {
-
-            var c = Math.round(Math.random() * 255);
-            id[i + 0] = c;
-            id[i + 1] = c;
-            id[i + 2] = c;
-            id[i + 3] = 255;
-
-        }
-
-        return id;
-
-    },
-
-    _createTexture: function (buf) {
-
+        this.gl.activeTexture(this.gl.TEXTURE0 + (index));
         var texture = this.gl.createTexture();
-        texture.width = buf.width;
-        texture.height = buf.height;
-
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, buf.width, buf.height, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buf);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
-        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
-        this.gl.generateMipmap(this.gl.TEXTURE_2D);
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, new Uint8Array([0, 255, 255, 255]));
 
         return texture;
 
     },
 
-    _updateTexture: function (index, buf) {
+    _updateTexture: function (buf, index) {
 
         if (this.textures[index]) {
 
-            if (this.textures[index].width !== buf.width || this.textures[index].height !== buf.height) {
+            this.gl.deleteTexture(this.textures[index]);
+            delete this.textures[index];
 
-                this.gl.deleteTexture(this.textures[index]);
-                delete this.textures[index];
-                this.textures[index] = this._createTexture(this._createTextureBuffer(buf.width, buf.height));
-
-            }
+            this._updateTexture(buf, index);
 
         } else {
 
-            this.textures[index] = this._createTexture(this._createTextureBuffer(buf.width, buf.height));
+            this.textures[index] = this._createTexture(index);
+            this.gl.activeTexture(this.gl.TEXTURE0 + (index));
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[index]);
+            this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
+            this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buf);
+
+            if (this._isPowerOf2(buf.width) && this._isPowerOf2(buf.height)) {
+
+                this.gl.generateMipmap(this.gl.TEXTURE_2D);
+
+            } else {
+
+                this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
+                this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
+                this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+                this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
+
+            }
 
         }
-
-
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.textures[index]);
-        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true);
-
-        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, buf);
 
     },
 
@@ -268,6 +248,12 @@ ShaderToy.prototype = {
 
     },
 
+    _isPowerOf2: function (value) {
+
+        return (value & (value - 1)) === 0;
+
+    },
+
     init: function () {
 
         var canvas = document.createElement('canvas');
@@ -330,22 +316,16 @@ ShaderToy.prototype = {
     },
 
     loadImage: function (url, index) {
-
         var self = this;
 
         var image = new Image();
         image.src = url;
+        image.index = index || 0;
         image.onload = function () {
 
-            self._updateTexture(index || 0, image);
+            self._updateTexture(image, this.index);
 
         };
-
-    },
-
-    generateNoiseTexture: function (size, index) {
-
-        this.textures[index || 0] = this._createTexture(this._createTextureBuffer(size, size));
 
     },
 
@@ -354,7 +334,6 @@ ShaderToy.prototype = {
         this._ready = false;
 
         this._fragmentShader[8] = str;
-
         var program = this._createProgram(this._vertexShader.join('\n'), this._fragmentShader.join('\n'));
         this.useProgram(program);
 
@@ -409,10 +388,11 @@ ShaderToy.prototype = {
 
         this._setU1f('iGlobalTime', (Date.now() - this.startTime) / 1000);
         this._setU2fv('iMouse', this.mouse);
-        this._setU1i('iChannel0', this.textures[0]);
-        this._setU1i('iChannel1', this.textures[1]);
-        this._setU1i('iChannel2', this.textures[2]);
-        this._setU1i('iChannel3', this.textures[3]);
+
+        this._setU1i('iChannel0', 0);
+        this._setU1i('iChannel1', 1);
+        this._setU1i('iChannel2', 2);
+        this._setU1i('iChannel3', 3);
 
         this.clear();
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
